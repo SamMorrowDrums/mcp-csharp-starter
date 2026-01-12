@@ -1,0 +1,21 @@
+{
+  "servers": {
+    // Development: Uses 'dotnet run' for quick iteration
+    "mcp-csharp-starter": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": ["run", "--project", "${workspaceFolder}"],
+      "env": {}
+    }
+    // For live reload during development, use 'dotnet watch run' in terminal
+    
+    // Production: Build first with 'dotnet publish', then use the exe:
+    // "command": "./bin/Release/net8.0/McpCSharpStarter"
+    
+    // HTTP transport: Run 'dotnet run -- --http' in terminal, then:
+    // "mcp-csharp-starter-http": {
+    //   "type": "http",
+    //   "url": "http://localhost:3000/mcp"
+    // }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch (stdio)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Build",
+      "program": "${workspaceFolder}/bin/Debug/net8.0/McpCSharpStarter.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Launch (HTTP)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Build",
+      "program": "${workspaceFolder}/bin/Debug/net8.0/McpCSharpStarter.dll",
+      "args": ["--http"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
+}

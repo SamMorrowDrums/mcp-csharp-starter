@@ -1,0 +1,17 @@
+# Build output
+bin/
+obj/
+
+# IDE
+.vs/
+.idea/
+*.user
+*.suo
+
+# Environment
+.env
+appsettings.Development.json
+
+# OS
+.DS_Store
+Thumbs.db

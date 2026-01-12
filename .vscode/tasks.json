@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "dotnet build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Run (stdio)",
+      "type": "shell",
+      "command": "dotnet run",
+      "group": "test"
+    },
+    {
+      "label": "Run (HTTP)",
+      "type": "shell",
+      "command": "dotnet run -- --http",
+      "group": "test"
+    },
+    {
+      "label": "Test",
+      "type": "shell",
+      "command": "dotnet test",
+      "group": "test"
+    },
+    {
+      "label": "Clean",
+      "type": "shell",
+      "command": "dotnet clean",
+      "group": "build"
+    }
+  ]
+}

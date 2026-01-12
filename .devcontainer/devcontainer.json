@@ -1,0 +1,21 @@
+{
+  "name": "MCP C# Starter",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+  "features": {},
+  "postCreateCommand": "dotnet restore",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit"
+      ]
+    }
+  },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "MCP HTTP Server",
+      "onAutoForward": "notify"
+    }
+  }
+}
