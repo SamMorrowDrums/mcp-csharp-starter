@@ -130,18 +130,7 @@ The [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) is an 
 ### Running Inspector
 
 ```bash
-# Build the project first
-dotnet build
-
-# Run inspector with dotnet run
-npx @modelcontextprotocol/inspector dotnet run
-
-# Or with the built DLL directly
-npx @modelcontextprotocol/inspector dotnet bin/Debug/net8.0/McpCSharpStarter.dll
-
-# For release builds
-dotnet build -c Release
-npx @modelcontextprotocol/inspector dotnet bin/Release/net8.0/McpCSharpStarter.dll
+npx @modelcontextprotocol/inspector -- dotnet run -- --stdio
 ```
 
 ### What Inspector Provides
