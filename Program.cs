@@ -16,6 +16,7 @@ using McpCSharpStarter.Prompts;
 using McpCSharpStarter.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using ModelContextProtocol;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
@@ -122,6 +123,9 @@ else
     Console.Error.WriteLine("Press Ctrl+C to exit");
     
     var builder = Host.CreateApplicationBuilder(args);
+    
+    // Disable all logging for stdio transport to avoid interfering with JSON-RPC
+    builder.Logging.ClearProviders();
     
     builder.Services
         .AddMcpServer(options =>
