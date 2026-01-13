@@ -38,8 +38,8 @@ A demonstration MCP server showcasing C# SDK capabilities.
 - **ask_llm**: Invoke LLM sampling to ask questions (requires client support)
 
 ### Dynamic Features
-- **load_bonus_tool**: Dynamically adds a calculator tool at runtime
-- **bonus_calculator**: Available after calling load_bonus_tool
+- **load_bonus_tool**: Dynamically adds a calculator tool at runtime (sends tools/list_changed notification)
+- **bonus_calculator**: Hidden until you call load_bonus_tool
 
 ## Available Resources
 
@@ -56,7 +56,7 @@ A demonstration MCP server showcasing C# SDK capabilities.
 1. **Testing Connection**: Call `hello` with your name to verify the server is responding
 2. **Weather Demo**: Call `get_weather` with a location to see structured output
 3. **Progress Demo**: Call `long_task` to see progress notifications
-4. **Dynamic Loading**: Call `load_bonus_tool`, then refresh tools to see `bonus_calculator`
+4. **Dynamic Loading**: Call `load_bonus_tool` - the server automatically notifies clients when tools change
 
 ## Tool Annotations
 
@@ -96,7 +96,7 @@ if (useHttp)
         .WithTools<SamplingTools>()
         .WithTools<ProgressTools>()
         .WithTools<DynamicTools>()
-        .WithTools<CalculatorTools>()
+        // Note: CalculatorTools is dynamically loaded via load_bonus_tool
         .WithPrompts<AllPrompts>()
         .WithResources<AllResources>();
     
@@ -145,7 +145,7 @@ else
         .WithTools<SamplingTools>()
         .WithTools<ProgressTools>()
         .WithTools<DynamicTools>()
-        .WithTools<CalculatorTools>()
+        // Note: CalculatorTools is dynamically loaded via load_bonus_tool
         .WithPrompts<AllPrompts>()
         .WithResources<AllResources>();
     

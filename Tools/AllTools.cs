@@ -226,12 +226,17 @@ public class DynamicTools
             return "Bonus tool is already loaded! Try calling 'bonus_calculator'.";
         }
 
-        // In C#, dynamic tool registration would typically be done through
-        // McpServerPrimitiveCollection. For this demo, we mark it as loaded.
-        // Real implementation would add to server.Options.ToolCollection
+        // Create the bonus tool dynamically from the CalculatorTools.Calculate method
+        var calculateMethod = typeof(CalculatorTools).GetMethod(nameof(CalculatorTools.Calculate))!;
+        var bonusTool = McpServerTool.Create(calculateMethod);
+        
+        // Add to the server's tool collection - this automatically sends
+        // the tools/list_changed notification to connected clients
+        server.ServerOptions.ToolCollection?.Add(bonusTool);
+        
         _bonusToolLoaded = true;
 
-        return "Bonus tool 'bonus_calculator' has been loaded! Refresh your tools list to see it.";
+        return "Bonus tool 'bonus_calculator' has been loaded! The tools list has been updated.";
     }
 }
 
