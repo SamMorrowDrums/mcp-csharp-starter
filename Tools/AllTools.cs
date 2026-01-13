@@ -57,7 +57,8 @@ public class GreetingTools
         ReadOnly = true,
         Destructive = false,
         Idempotent = true,
-        OpenWorld = false)]
+        OpenWorld = false,
+        IconSource = Icons.WavingHand)]
     [Description("A friendly greeting tool that says hello to someone")]
     public static string Hello(
         [Description("The name to greet")] string name)
@@ -94,7 +95,8 @@ public class WeatherTools
         ReadOnly = true,
         Destructive = false,
         Idempotent = false,  // Simulated - results vary
-        OpenWorld = false)]  // Not real external call
+        OpenWorld = false,   // Not real external call
+        IconSource = Icons.SunBehindCloud)]
     [Description("Get current weather for a location (simulated)")]
     public static string GetWeather(
         [Description("City name or coordinates")] string location)
@@ -126,7 +128,8 @@ public class SamplingTools
         ReadOnly = true,
         Destructive = false,
         Idempotent = false,  // LLM responses vary
-        OpenWorld = false)]
+        OpenWorld = false,
+        IconSource = Icons.Robot)]
     [Description("Ask the connected LLM a question using sampling")]
     public static async Task<string> AskLlm(
         McpServer server,
@@ -175,7 +178,8 @@ public class ProgressTools
         ReadOnly = true,
         Destructive = false,
         Idempotent = true,
-        OpenWorld = false)]
+        OpenWorld = false,
+        IconSource = Icons.Hourglass)]
     [Description("A task that takes 5 seconds and reports progress along the way")]
     public static async Task<string> LongTask(
         McpServer server,
@@ -212,7 +216,8 @@ public class DynamicTools
         ReadOnly = false,  // Modifies server state
         Destructive = false,
         Idempotent = true,  // Safe to call multiple times
-        OpenWorld = false)]
+        OpenWorld = false,
+        IconSource = Icons.Package)]
     [Description("Dynamically loads a bonus tool that wasn't available at startup")]
     public static string LoadBonusTool(McpServer server)
     {
@@ -245,7 +250,8 @@ public class CalculatorTools
         ReadOnly = true,  // Pure computation
         Destructive = false,
         Idempotent = true,  // Same inputs = same outputs
-        OpenWorld = false)]
+        OpenWorld = false,
+        IconSource = Icons.Abacus)]
     [Description("A calculator that was dynamically loaded")]
     public static string Calculate(
         [Description("First number")] double a,
