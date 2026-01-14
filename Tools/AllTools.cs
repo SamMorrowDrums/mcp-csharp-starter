@@ -10,7 +10,7 @@
  *
  * ## Tool Annotations
  *
- * Every tool MUST have annotations to help AI assistants understand behavior:
+ * Every tool SHOULD have annotations to help AI assistants understand behavior:
  * - ReadOnly: Tool only reads data, doesn't modify state
  * - Destructive: Tool can permanently delete or modify data
  * - Idempotent: Repeated calls with same args have same effect
@@ -273,5 +273,152 @@ public class CalculatorTools
         };
 
         return $"{a} {operation.ToString().ToLower()} {b} = {result}";
+    }
+}
+
+// =============================================================================
+// Elicitation Tools - Request user input during tool execution
+//
+// WHY ELICITATION MATTERS:
+// Elicitation allows tools to request additional information from users
+// mid-execution, enabling interactive workflows. This is essential for:
+//   - Confirming destructive actions before they happen
+//   - Gathering missing parameters that weren't provided upfront
+//   - Implementing approval workflows for sensitive operations
+//   - Collecting feedback or additional context during execution
+//
+// TWO ELICITATION MODES:
+// - Form (schema): Display a structured form with typed fields in the client
+// - URL: Open a web page (e.g., OAuth flow, feedback form, documentation)
+//
+// RESPONSE ACTIONS:
+// - "accept": User provided the requested information
+// - "decline": User explicitly refused to provide information
+// - "cancel": User dismissed the request without responding
+// =============================================================================
+
+/// <summary>
+/// Elicitation tools demonstrating user input requests
+/// </summary>
+[McpServerToolType]
+public class ElicitationTools
+{
+    /// <summary>
+    /// Demonstrates elicitation - requests user confirmation before proceeding
+    /// </summary>
+    [McpServerTool(
+        Name = "confirm_action",
+        Title = "Confirm Action",
+        ReadOnly = true,
+        Destructive = false,
+        Idempotent = false,  // User response varies
+        OpenWorld = false,
+        IconSource = Icons.Question)]
+    [Description("Demonstrates elicitation - requests user confirmation before proceeding")]
+    public static async Task<string> ConfirmAction(
+        McpServer server,
+        [Description("The action to confirm with the user")] string action,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            // Check if client supports elicitation
+            if (server.ClientCapabilities?.Elicitation == null)
+            {
+                return "Elicitation not supported by this client.";
+            }
+
+            // Form elicitation: Display a structured form with typed fields
+            // The client renders this as a dialog/form based on the JSON schema
+            var result = await server.ElicitAsync(new ElicitRequestParams
+            {
+                Message = $"Please confirm: {action}",
+                RequestedSchema = new ElicitRequestParams.RequestSchema
+                {
+                    Properties =
+                    {
+                        ["confirm"] = new ElicitRequestParams.BooleanSchema
+                        {
+                            Title = "Confirm",
+                            Description = "Confirm the action"
+                        },
+                        ["reason"] = new ElicitRequestParams.StringSchema
+                        {
+                            Title = "Reason",
+                            Description = "Optional reason for your choice"
+                        }
+                    },
+                    Required = ["confirm"]
+                }
+            }, cancellationToken);
+
+            return result.Action switch
+            {
+                "accept" when result.Content?.TryGetValue("confirm", out var confirmValue) == true 
+                    && confirmValue.ValueKind == JsonValueKind.True =>
+                    $"Action confirmed: {action}\nReason: {(result.Content.TryGetValue("reason", out var reason) && reason.ValueKind == JsonValueKind.String ? reason.GetString() : "No reason provided")}",
+                "accept" => $"Action declined by user: {action}",
+                "decline" => $"User declined to respond for: {action}",
+                _ => $"User cancelled elicitation for: {action}"
+            };
+        }
+        catch (Exception ex)
+        {
+            return $"Elicitation not supported or failed: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Demonstrates URL elicitation - opens a feedback form in the browser
+    /// </summary>
+    [McpServerTool(
+        Name = "get_feedback",
+        Title = "Get Feedback",
+        ReadOnly = true,
+        Destructive = false,
+        Idempotent = false,  // User response varies
+        OpenWorld = true,    // Opens external URL
+        IconSource = Icons.Speech)]
+    [Description("Demonstrates URL elicitation - opens a feedback form in the browser")]
+    public static async Task<string> GetFeedback(
+        McpServer server,
+        [Description("Optional topic for the feedback")] string? topic = null,
+        CancellationToken cancellationToken = default)
+    {
+        var feedbackUrl = "https://github.com/SamMorrowDrums/mcp-starters/issues/new?template=workshop-feedback.yml";
+        if (!string.IsNullOrEmpty(topic))
+        {
+            feedbackUrl += $"&title={Uri.EscapeDataString(topic)}";
+        }
+
+        try
+        {
+            // Check if client supports elicitation
+            if (server.ClientCapabilities?.Elicitation == null)
+            {
+                return $"Elicitation not supported by this client.\n\nYou can provide feedback directly at: {feedbackUrl}";
+            }
+
+            // URL elicitation: Open a web page in the user's browser
+            // Useful for OAuth flows, external forms, documentation links, etc.
+            var result = await server.ElicitAsync(new ElicitRequestParams
+            {
+                Mode = "url",
+                ElicitationId = $"feedback-{DateTime.UtcNow.Ticks}",
+                Url = feedbackUrl,
+                Message = "Please provide feedback on MCP Starters by completing the form at the URL below:"
+            }, cancellationToken);
+
+            return result.Action switch
+            {
+                "accept" => "Thank you for providing feedback! Your input helps improve MCP Starters.",
+                "decline" => $"No problem! Feel free to provide feedback anytime at: {feedbackUrl}",
+                _ => "Feedback request cancelled."
+            };
+        }
+        catch (Exception ex)
+        {
+            return $"URL elicitation not supported or failed: {ex.Message}\n\nYou can still provide feedback at: {feedbackUrl}";
+        }
     }
 }

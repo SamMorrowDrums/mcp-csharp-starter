@@ -41,6 +41,10 @@ A demonstration MCP server showcasing C# SDK capabilities.
 - **load_bonus_tool**: Dynamically adds a calculator tool at runtime (sends tools/list_changed notification)
 - **bonus_calculator**: Hidden until you call load_bonus_tool
 
+### Elicitation (User Input)
+- **confirm_action**: Demonstrates schema elicitation - requests user confirmation
+- **get_feedback**: Demonstrates URL elicitation - opens feedback form in browser
+
 ## Available Resources
 
 - **info://about**: Server information
@@ -57,6 +61,8 @@ A demonstration MCP server showcasing C# SDK capabilities.
 2. **Weather Demo**: Call `get_weather` with a location to see structured output
 3. **Progress Demo**: Call `long_task` to see progress notifications
 4. **Dynamic Loading**: Call `load_bonus_tool` - the server automatically notifies clients when tools change
+5. **Elicitation Demo**: Call `confirm_action` to see user confirmation flow
+6. **URL Elicitation**: Call `get_feedback` to open a feedback form
 
 ## Tool Annotations
 
@@ -96,6 +102,7 @@ if (useHttp)
         .WithTools<SamplingTools>()
         .WithTools<ProgressTools>()
         .WithTools<DynamicTools>()
+        .WithTools<ElicitationTools>()
         // Note: CalculatorTools is dynamically loaded via load_bonus_tool
         .WithPrompts<AllPrompts>()
         .WithResources<AllResources>();
@@ -145,6 +152,7 @@ else
         .WithTools<SamplingTools>()
         .WithTools<ProgressTools>()
         .WithTools<DynamicTools>()
+        .WithTools<ElicitationTools>()
         // Note: CalculatorTools is dynamically loaded via load_bonus_tool
         .WithPrompts<AllPrompts>()
         .WithResources<AllResources>();
