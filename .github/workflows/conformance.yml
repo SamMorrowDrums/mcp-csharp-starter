@@ -29,7 +29,6 @@ jobs:
             "name": "http",
             "transport": "http",
             "start_command": "dotnet run --no-build -c Release -- --http --port 3000",
-            "server_url": "http://localhost:3000/mcp",
-            "health_endpoint": "/health"
+            "server_url": "http://localhost:3000/mcp"
           }
         ]
