@@ -1,0 +1,21 @@
+name: Conformance Test
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    uses: SamMorrowDrums/mcp-conformance-action/.github/workflows/conformance.yml@main
+    with:
+      install_command: "dotnet restore"
+      build_command: "dotnet build -c Release"
+      start_command: "dotnet run --no-build -c Release -- --stdio"
+      setup_dotnet: true
+      dotnet_version: "8.0.x"
