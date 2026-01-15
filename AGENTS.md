@@ -2,6 +2,19 @@
 
 This file provides context for AI coding agents working in this repository.
 
+## Quick Reference
+
+| Task | Command |
+|------|---------|
+| Restore | `dotnet restore` |
+| Build | `dotnet build` |
+| Test | `dotnet test` |
+| Format | `dotnet format` |
+| Format check | `dotnet format --verify-no-changes` |
+| Run (stdio) | `dotnet run` |
+| Run (HTTP) | `dotnet run -- --http` |
+| Publish | `dotnet publish -c Release` |
+
 ## Project Overview
 
 **MCP C# Starter** is a feature-complete Model Context Protocol (MCP) server template in C# using the official csharp-sdk. It demonstrates all major MCP features including tools, resources, resource templates, prompts, sampling, progress updates, and dynamic tool loading.
@@ -11,9 +24,10 @@ This file provides context for AI coding agents working in this repository.
 ## Technology Stack
 
 - **Runtime**: .NET 8.0
-- **MCP SDK**: `ModelContextProtocol` NuGet package
+- **MCP SDK**: `ModelContextProtocol` NuGet package (0.5.0-preview.1)
 - **DI Framework**: Microsoft.Extensions.Hosting
 - **Pattern**: Attribute-based (`[McpServerTool]`, `[McpServerResource]`, `[McpServerPrompt]`)
+- **Formatter**: dotnet format (built-in)
 
 ## Project Structure
 
@@ -62,14 +76,14 @@ dotnet publish -c Release
 ## Linting & Formatting
 
 ```bash
-# Format code
+# Format code (required before commit)
 dotnet format
 
-# Format and verify (CI mode)
+# Check formatting (CI mode)
 dotnet format --verify-no-changes
 
-# Analyze code
-dotnet build /p:EnforceCodeStyleInBuild=true
+# Build with code style enforcement
+dotnet build --warnaserror
 ```
 
 ## Testing

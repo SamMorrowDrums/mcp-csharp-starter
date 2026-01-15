@@ -229,11 +229,11 @@ public class DynamicTools
         // Create the bonus tool dynamically from the CalculatorTools.Calculate method
         var calculateMethod = typeof(CalculatorTools).GetMethod(nameof(CalculatorTools.Calculate))!;
         var bonusTool = McpServerTool.Create(calculateMethod);
-        
+
         // Add to the server's tool collection - this automatically sends
         // the tools/list_changed notification to connected clients
         server.ServerOptions.ToolCollection?.Add(bonusTool);
-        
+
         _bonusToolLoaded = true;
 
         return "Bonus tool 'bonus_calculator' has been loaded! The tools list has been updated.";
@@ -354,7 +354,7 @@ public class ElicitationTools
 
             return result.Action switch
             {
-                "accept" when result.Content?.TryGetValue("confirm", out var confirmValue) == true 
+                "accept" when result.Content?.TryGetValue("confirm", out var confirmValue) == true
                     && confirmValue.ValueKind == JsonValueKind.True =>
                     $"Action confirmed: {action}\nReason: {(result.Content.TryGetValue("reason", out var reason) && reason.ValueKind == JsonValueKind.String ? reason.GetString() : "No reason provided")}",
                 "accept" => $"Action declined by user: {action}",

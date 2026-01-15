@@ -83,7 +83,7 @@ if (useHttp)
 {
     // HTTP/SSE Transport
     var builder = WebApplication.CreateBuilder(args);
-    
+
     builder.Services
         .AddMcpServer(options =>
         {
@@ -106,21 +106,22 @@ if (useHttp)
         // Note: CalculatorTools is dynamically loaded via load_bonus_tool
         .WithPrompts<AllPrompts>()
         .WithResources<AllResources>();
-    
+
     var app = builder.Build();
-    
+
     app.MapMcp();
-    app.MapGet("/health", () => Results.Json(new { 
-        status = "ok", 
-        server = "mcp-csharp-starter", 
-        version = "1.0.0" 
+    app.MapGet("/health", () => Results.Json(new
+    {
+        status = "ok",
+        server = "mcp-csharp-starter",
+        version = "1.0.0"
     }));
-    
+
     Console.WriteLine($"MCP C# Starter running on http://localhost:{port}");
     Console.WriteLine($"  MCP endpoint: http://localhost:{port}/mcp");
     Console.WriteLine($"  Health check: http://localhost:{port}/health");
     Console.WriteLine("Press Ctrl+C to exit");
-    
+
     app.Run($"http://localhost:{port}");
 }
 else
@@ -128,12 +129,12 @@ else
     // stdio Transport (default)
     Console.Error.WriteLine("MCP C# Starter running on stdio");
     Console.Error.WriteLine("Press Ctrl+C to exit");
-    
+
     var builder = Host.CreateApplicationBuilder(args);
-    
+
     // Disable all logging for stdio transport to avoid interfering with JSON-RPC
     builder.Logging.ClearProviders();
-    
+
     builder.Services
         .AddMcpServer(options =>
         {
@@ -156,7 +157,7 @@ else
         // Note: CalculatorTools is dynamically loaded via load_bonus_tool
         .WithPrompts<AllPrompts>()
         .WithResources<AllResources>();
-    
+
     var app = builder.Build();
     await app.RunAsync();
 }
