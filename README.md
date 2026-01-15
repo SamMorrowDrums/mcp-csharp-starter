@@ -1,5 +1,11 @@
 # MCP C# Starter
 
+[![CI](https://github.com/SamMorrowDrums/mcp-csharp-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/SamMorrowDrums/mcp-csharp-starter/actions/workflows/ci.yml)
+[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp&logoColor=white)](https://docs.microsoft.com/en-us/dotnet/csharp/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-purple)](https://modelcontextprotocol.io/)
+
 A feature-complete Model Context Protocol (MCP) server template in C# using the official csharp-sdk. This starter demonstrates all major MCP features with clean, idiomatic C# code leveraging .NET 8 and dependency injection.
 
 ## 📚 Documentation
