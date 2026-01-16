@@ -19,14 +19,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
       - uses: SamMorrowDrums/mcp-conformance-action@v1
         with:
-          install_command: "dotnet restore"
-          build_command: "dotnet build -c Release"
+          setup_dotnet: true
+          dotnet_version: '8.0.x'
+          install_command: dotnet restore
+          build_command: dotnet build -c Release
           configurations: |
             [
               {
