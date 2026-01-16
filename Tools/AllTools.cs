@@ -64,7 +64,8 @@ public class GreetingTools
         [Description("The name to greet")] string name,
         [Description("Convert greeting to uppercase")] bool uppercase = false)
     {
-        return uppercase ? $"Hello, {name}! Welcome to MCP.".ToUpper() : $"Hello, {name}! Welcome to MCP.";
+        var greeting = $"Hello, {name}! Welcome to MCP.";
+        return uppercase ? greeting.ToUpper() : greeting;
     }
 }
 
