@@ -13,23 +13,31 @@ permissions:
 
 jobs:
   conformance:
-    uses: SamMorrowDrums/mcp-conformance-action/.github/workflows/conformance.yml@v1
-    with:
-      install_command: "dotnet restore"
-      build_command: "dotnet build -c Release"
-      setup_dotnet: true
-      dotnet_version: "8.0.x"
-      configurations: |
-        [
-          {
-            "name": "stdio",
-            "transport": "stdio",
-            "start_command": "dotnet run --no-build -c Release -- --stdio"
-          },
-          {
-            "name": "streamable-http",
-            "transport": "streamable-http",
-            "start_command": "dotnet run --no-build -c Release -- --http --port 3000",
-            "server_url": "http://localhost:3000/mcp"
-          }
-        ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - uses: SamMorrowDrums/mcp-conformance-action@v1
+        with:
+          install_command: "dotnet restore"
+          build_command: "dotnet build -c Release"
+          configurations: |
+            [
+              {
+                "name": "stdio",
+                "transport": "stdio",
+                "start_command": "dotnet run --no-build -c Release -- --stdio"
+              },
+              {
+                "name": "streamable-http",
+                "transport": "streamable-http",
+                "start_command": "dotnet run --no-build -c Release -- --http --port 3000",
+                "server_url": "http://localhost:3000/mcp"
+              }
+            ]
