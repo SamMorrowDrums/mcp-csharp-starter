@@ -1,0 +1,41 @@
+name: Conformance Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: SamMorrowDrums/mcp-conformance-action@616529364beb374fa4da7f81f26932fa5a70ce97 # v2.0.2
+        with:
+          setup_dotnet: true
+          dotnet_version: '8.0.x'
+          install_command: dotnet restore
+          build_command: dotnet build -c Release
+          configurations: |
+            [
+              {
+                "name": "stdio",
+                "transport": "stdio",
+                "start_command": "dotnet run --no-build -c Release -- --stdio"
+              },
+              {
+                "name": "streamable-http",
+                "transport": "streamable-http",
+                "start_command": "dotnet run --no-build -c Release -- --http --port 3000",
+                "server_url": "http://localhost:3000/mcp"
+              }
+            ]
