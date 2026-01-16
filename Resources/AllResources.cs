@@ -36,40 +36,5 @@ public class AllResources
         SDK: ModelContextProtocol 0.5.0-preview.1
         """;
 
-    /// <summary>
-    /// Sample document resource - demonstrates file-like resource.
-    /// Shows how to serve document content.
-    /// </summary>
-    [McpServerResource(
-        UriTemplate = "file://example.md",
-        Name = "sample_document",
-        Title = "Sample Document",
-        MimeType = "text/markdown")]
-    [Description("A sample markdown document demonstrating resource capabilities")]
-    public static string SampleDocument() => """
-        # Sample Markdown Document
-        
-        This is a sample document served as an MCP resource.
-        
-        ## Features
-        
-        - **Resources** can serve any content type
-        - **MIME types** help clients understand content
-        - **URIs** provide unique identifiers
-        
-        ## Usage
-        
-        Clients can read this resource to get sample content for testing
-        or demonstration purposes.
-        
-        ```csharp
-        // Example code block
-        var client = new McpClient();
-        var content = await client.ReadResourceAsync("file://example.md");
-        ```
-        
-        ## Conclusion
-        
-        Resources are a powerful way to expose data to MCP clients!
-        """;
+
 }
