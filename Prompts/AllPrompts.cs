@@ -23,7 +23,7 @@ public class AllPrompts
     /// Generate a greeting in a specific style
     /// </summary>
     [McpServerPrompt(Name = "greet", Title = "Greeting Prompt")]
-    [Description("Generate a greeting in a specific style")]
+    [Description("Generate a personalized greeting message with customizable style")]
     public static IEnumerable<PromptMessage> Greet(
         [Description("Name of the person to greet")] string name,
         [Description("The greeting style (formal, casual, enthusiastic)")] string style = "casual")
