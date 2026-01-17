@@ -19,19 +19,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Note: The C# SDK uses SSE (Server-Sent Events) transport for HTTP,
-      # which is not yet supported by the conformance action. Only testing stdio.
-      - uses: SamMorrowDrums/mcp-conformance-action@v2.3.2
+      - uses: SamMorrowDrums/mcp-conformance-action@v2.3.3
         with:
           setup_dotnet: true
           dotnet_version: '8.0.x'
           install_command: dotnet restore
           build_command: dotnet build -c Release
+          http_start_command: dotnet run --no-build -c Release -- --http --port 3000
+          http_startup_wait_ms: 5000
           configurations: |
             [
               {
                 "name": "stdio",
                 "transport": "stdio",
-                "start_command": "dotnet run --no-build -c Release -- --stdio"
+                "start_command": "dotnet run --no-build -c Release"
+              },
+              {
+                "name": "streamable-http",
+                "transport": "streamable-http",
+                "server_url": "http://localhost:3000/"
               }
             ]
