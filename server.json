@@ -1,0 +1,28 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "mcp-csharp-starter",
+  "description": "A C# MCP server template demonstrating tools, prompts, and resources",
+  "title": "MCP C# Starter",
+  "repository": {
+    "url": "https://github.com/SamMorrowDrums/mcp-csharp-starter",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "dotnet",
+      "identifier": "mcp-csharp-starter",
+      "transport": {
+        "type": "stdio"
+      },
+      "command": ["dotnet", "run"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "http://localhost:3000/mcp",
+      "description": "Local HTTP server"
+    }
+  ]
+}
