@@ -32,7 +32,7 @@ jobs:
               {
                 "name": "stdio",
                 "transport": "stdio",
-                "start_command": "dotnet run --no-build -c Release -- --stdio"
+                "start_command": "dotnet run --no-build -c Release"
               },
               {
                 "name": "streamable-http",

@@ -61,9 +61,11 @@ public class GreetingTools
         IconSource = Icons.WavingHand)]
     [Description("A friendly greeting tool that says hello to someone")]
     public static string Hello(
-        [Description("The name to greet")] string name)
+        [Description("The name to greet")] string name,
+        [Description("Convert greeting to uppercase")] bool uppercase = false)
     {
-        return $"Hello, {name}! Welcome to MCP.";
+        var greeting = $"Hello, {name}! Welcome to MCP.";
+        return uppercase ? greeting.ToUpper() : greeting;
     }
 }
 
