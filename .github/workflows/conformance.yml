@@ -19,13 +19,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: SamMorrowDrums/mcp-conformance-action@v2.3.0
+      - uses: SamMorrowDrums/mcp-conformance-action@v2
         with:
           setup_dotnet: true
           dotnet_version: '8.0.x'
           install_command: dotnet restore
           build_command: dotnet build -c Release
           http_start_command: dotnet run --no-build -c Release -- --http --port 3000
+          http_startup_wait_ms: 5000
           configurations: |
             [
               {
@@ -36,6 +37,6 @@ jobs:
               {
                 "name": "streamable-http",
                 "transport": "streamable-http",
-                "server_url": "http://localhost:3000/mcp"
+                "server_url": "http://localhost:3000/"
               }
             ]
