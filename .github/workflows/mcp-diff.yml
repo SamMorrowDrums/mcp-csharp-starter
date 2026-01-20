@@ -1,0 +1,42 @@
+name: MCP Server Diff
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  mcp-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: SamMorrowDrums/mcp-server-diff@v2
+        with:
+          setup_dotnet: true
+          dotnet_version: '8.0.x'
+          install_command: dotnet restore
+          build_command: dotnet build -c Release
+          http_start_command: dotnet run --no-build -c Release -- --http --port 3000
+          http_startup_wait_ms: 5000
+          configurations: |
+            [
+              {
+                "name": "stdio",
+                "transport": "stdio",
+                "start_command": "dotnet run --no-build -c Release -- --stdio"
+              },
+              {
+                "name": "streamable-http",
+                "transport": "streamable-http",
+                "server_url": "http://localhost:3000/"
+              }
+            ]
