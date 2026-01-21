@@ -20,22 +20,22 @@ namespace McpCSharpStarter.Prompts;
 public class AllPrompts
 {
     /// <summary>
-    /// Generate a greeting in a specific style
+    /// Generate a greeting message
     /// </summary>
     [McpServerPrompt(Name = "greet", Title = "Greeting Prompt")]
-    [Description("Generate a greeting in a specific style")]
+    [Description("Generate a greeting message")]
     public static IEnumerable<PromptMessage> Greet(
         [Description("Name of the person to greet")] string name,
-        [Description("The greeting style (formal, casual, enthusiastic)")] string style = "casual")
+        [Description("Greeting style (formal/casual)")] string? style = null)
     {
-        var styles = new Dictionary<string, string>
+        var styleText = style switch
         {
-            ["formal"] = $"Please compose a formal, professional greeting for {name}.",
-            ["casual"] = $"Write a casual, friendly hello to {name}.",
-            ["enthusiastic"] = $"Create an excited, enthusiastic greeting for {name}!"
+            "formal" => "formal, professional",
+            "casual" => "casual, friendly",
+            _ => "warm and friendly"
         };
 
-        var text = styles.GetValueOrDefault(style, styles["casual"]);
+        var text = $"Please compose a {styleText} greeting for {name}.";
 
         return [
             new PromptMessage
@@ -47,29 +47,21 @@ public class AllPrompts
     }
 
     /// <summary>
-    /// Request a code review with specific focus areas
+    /// Review code for potential improvements
     /// </summary>
     [McpServerPrompt(Name = "code_review", Title = "Code Review")]
-    [Description("Request a code review with specific focus areas")]
+    [Description("Review code for potential improvements")]
     public static IEnumerable<PromptMessage> CodeReview(
-        [Description("The code to review")] string code,
-        [Description("Programming language")] string language,
-        [Description("What to focus on (security, performance, readability, all)")] string focus = "all")
+        [Description("The code to review")] string code)
     {
-        var focusInstructions = new Dictionary<string, string>
-        {
-            ["security"] = "Focus on security vulnerabilities and potential exploits.",
-            ["performance"] = "Focus on performance optimizations and efficiency issues.",
-            ["readability"] = "Focus on code clarity, naming, and maintainability.",
-            ["all"] = "Provide a comprehensive review covering security, performance, and readability."
-        };
-
-        var instruction = focusInstructions.GetValueOrDefault(focus, focusInstructions["all"]);
-
         var text = $"""
-            Please review the following {language} code. {instruction}
+            Please review the following code for potential improvements, focusing on:
+            - Security vulnerabilities
+            - Performance issues
+            - Code quality and maintainability
+            - Best practices
 
-            ```{language}
+            ```
             {code}
             ```
             """;
