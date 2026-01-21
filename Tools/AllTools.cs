@@ -339,7 +339,7 @@ public class ElicitationTools
             }
 
             // Build message with destructive warning if applicable
-            var message = destructive 
+            var message = destructive
                 ? $"⚠️ DESTRUCTIVE ACTION - Please confirm: {action}"
                 : $"Please confirm: {action}";
 
@@ -355,8 +355,8 @@ public class ElicitationTools
                         ["confirm"] = new ElicitRequestParams.BooleanSchema
                         {
                             Title = "Confirm",
-                            Description = destructive 
-                                ? "Confirm this destructive action" 
+                            Description = destructive
+                                ? "Confirm this destructive action"
                                 : "Confirm the action"
                         },
                         ["reason"] = new ElicitRequestParams.StringSchema

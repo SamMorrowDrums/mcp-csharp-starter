@@ -78,7 +78,7 @@ public class AllResources
         Title = "Personalized Greeting",
         MimeType = "text/plain")]
     [Description("A personalized greeting for a specific person")]
-    public static string PersonalizedGreeting(string name) => 
+    public static string PersonalizedGreeting(string name) =>
         $"Hello, {name}! This is a personalized greeting generated just for you.";
 
     /// <summary>
