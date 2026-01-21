@@ -49,7 +49,7 @@ public enum CalculatorOperation
 public class GreetingTools
 {
     /// <summary>
-    /// A friendly greeting tool that says hello to someone
+    /// Say hello to a person
     /// </summary>
     [McpServerTool(
         Name = "hello",
@@ -59,9 +59,9 @@ public class GreetingTools
         Idempotent = true,
         OpenWorld = false,
         IconSource = Icons.WavingHand)]
-    [Description("A friendly greeting tool that says hello to someone")]
+    [Description("Say hello to a person")]
     public static string Hello(
-        [Description("The name to greet")] string name)
+        [Description("Name of the person to greet")] string name)
     {
         return $"Hello, {name}! Welcome to MCP.";
     }
@@ -87,7 +87,7 @@ public class WeatherTools
     private static readonly Random _random = new();
 
     /// <summary>
-    /// Get current weather for a location (simulated)
+    /// Get the current weather for a city
     /// </summary>
     [McpServerTool(
         Name = "get_weather",
@@ -97,12 +97,12 @@ public class WeatherTools
         Idempotent = false,  // Simulated - results vary
         OpenWorld = false,   // Not real external call
         IconSource = Icons.SunBehindCloud)]
-    [Description("Get current weather for a location (simulated)")]
+    [Description("Get the current weather for a city")]
     public static string GetWeather(
-        [Description("City name or coordinates")] string location)
+        [Description("City name to get weather for")] string city)
     {
         var weather = new WeatherData(
-            Location: location,
+            Location: city,
             Temperature: 15 + _random.Next(20),
             Unit: "celsius",
             Conditions: Conditions[_random.Next(Conditions.Length)],
@@ -133,8 +133,8 @@ public class SamplingTools
     [Description("Ask the connected LLM a question using sampling")]
     public static async Task<string> AskLlm(
         McpServer server,
-        [Description("The question or prompt for the LLM")] string prompt,
-        [Description("Maximum number of tokens to generate")] int maxTokens = 100,
+        [Description("The question or prompt to send to the LLM")] string prompt,
+        [Description("Maximum tokens in response")] int maxTokens = 100,
         CancellationToken cancellationToken = default)
     {
         try
@@ -170,7 +170,7 @@ public class SamplingTools
 public class ProgressTools
 {
     /// <summary>
-    /// A task that takes 5 seconds and reports progress along the way
+    /// Simulate a long-running task with progress updates
     /// </summary>
     [McpServerTool(
         Name = "long_task",
@@ -180,13 +180,22 @@ public class ProgressTools
         Idempotent = true,
         OpenWorld = false,
         IconSource = Icons.Hourglass)]
-    [Description("A task that takes 5 seconds and reports progress along the way")]
+    [Description("Simulate a long-running task with progress updates")]
     public static async Task<string> LongTask(
         McpServer server,
         [Description("Name for this task")] string taskName,
+        [Description("Number of steps to simulate")] int steps = 5,
         CancellationToken cancellationToken = default)
     {
-        const int steps = 5;
+        // Validate steps parameter
+        if (steps < 1)
+        {
+            return "Error: steps must be at least 1";
+        }
+        if (steps > 100)
+        {
+            return "Error: steps must not exceed 100 to prevent excessive delays";
+        }
 
         for (int i = 0; i < steps; i++)
         {
@@ -208,7 +217,7 @@ public class DynamicTools
     private static bool _bonusToolLoaded = false;
 
     /// <summary>
-    /// Dynamically loads a bonus tool that wasn't available at startup
+    /// Dynamically register a new bonus tool
     /// </summary>
     [McpServerTool(
         Name = "load_bonus_tool",
@@ -218,7 +227,7 @@ public class DynamicTools
         Idempotent = true,  // Safe to call multiple times
         OpenWorld = false,
         IconSource = Icons.Package)]
-    [Description("Dynamically loads a bonus tool that wasn't available at startup")]
+    [Description("Dynamically register a new bonus tool")]
     public static string LoadBonusTool(McpServer server)
     {
         if (_bonusToolLoaded)
@@ -304,7 +313,7 @@ public class CalculatorTools
 public class ElicitationTools
 {
     /// <summary>
-    /// Demonstrates elicitation - requests user confirmation before proceeding
+    /// Request user confirmation before proceeding
     /// </summary>
     [McpServerTool(
         Name = "confirm_action",
@@ -314,10 +323,11 @@ public class ElicitationTools
         Idempotent = false,  // User response varies
         OpenWorld = false,
         IconSource = Icons.Question)]
-    [Description("Demonstrates elicitation - requests user confirmation before proceeding")]
+    [Description("Request user confirmation before proceeding")]
     public static async Task<string> ConfirmAction(
         McpServer server,
-        [Description("The action to confirm with the user")] string action,
+        [Description("Description of the action to confirm")] string action,
+        [Description("Whether the action is destructive")] bool destructive = false,
         CancellationToken cancellationToken = default)
     {
         try
@@ -328,11 +338,16 @@ public class ElicitationTools
                 return "Elicitation not supported by this client.";
             }
 
+            // Build message with destructive warning if applicable
+            var message = destructive
+                ? $"⚠️ DESTRUCTIVE ACTION - Please confirm: {action}"
+                : $"Please confirm: {action}";
+
             // Form elicitation: Display a structured form with typed fields
             // The client renders this as a dialog/form based on the JSON schema
             var result = await server.ElicitAsync(new ElicitRequestParams
             {
-                Message = $"Please confirm: {action}",
+                Message = message,
                 RequestedSchema = new ElicitRequestParams.RequestSchema
                 {
                     Properties =
@@ -340,7 +355,9 @@ public class ElicitationTools
                         ["confirm"] = new ElicitRequestParams.BooleanSchema
                         {
                             Title = "Confirm",
-                            Description = "Confirm the action"
+                            Description = destructive
+                                ? "Confirm this destructive action"
+                                : "Confirm the action"
                         },
                         ["reason"] = new ElicitRequestParams.StringSchema
                         {
@@ -369,7 +386,7 @@ public class ElicitationTools
     }
 
     /// <summary>
-    /// Demonstrates URL elicitation - opens a feedback form in the browser
+    /// Request feedback from the user
     /// </summary>
     [McpServerTool(
         Name = "get_feedback",
@@ -379,16 +396,16 @@ public class ElicitationTools
         Idempotent = false,  // User response varies
         OpenWorld = true,    // Opens external URL
         IconSource = Icons.Speech)]
-    [Description("Demonstrates URL elicitation - opens a feedback form in the browser")]
+    [Description("Request feedback from the user")]
     public static async Task<string> GetFeedback(
         McpServer server,
-        [Description("Optional topic for the feedback")] string? topic = null,
+        [Description("The question to ask the user")] string question,
         CancellationToken cancellationToken = default)
     {
         var feedbackUrl = "https://github.com/SamMorrowDrums/mcp-starters/issues/new?template=workshop-feedback.yml";
-        if (!string.IsNullOrEmpty(topic))
+        if (!string.IsNullOrEmpty(question))
         {
-            feedbackUrl += $"&title={Uri.EscapeDataString(topic)}";
+            feedbackUrl += $"&title={Uri.EscapeDataString(question)}";
         }
 
         try

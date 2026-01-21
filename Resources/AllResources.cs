@@ -1,5 +1,6 @@
 using ModelContextProtocol.Server;
 using System.ComponentModel;
+using System.Text.Json;
 
 namespace McpCSharpStarter.Resources;
 
@@ -15,8 +16,8 @@ public class AllResources
     /// Demonstrates a simple text resource.
     /// </summary>
     [McpServerResource(
-        UriTemplate = "info://about",
-        Name = "about",
+        UriTemplate = "about://server",
+        Name = "About",
         Title = "About this Server",
         MimeType = "text/plain")]
     [Description("Information about this MCP server")]
@@ -41,13 +42,13 @@ public class AllResources
     /// Shows how to serve document content.
     /// </summary>
     [McpServerResource(
-        UriTemplate = "file://example.md",
-        Name = "sample_document",
-        Title = "Sample Document",
-        MimeType = "text/markdown")]
-    [Description("A sample markdown document demonstrating resource capabilities")]
-    public static string SampleDocument() => """
-        # Sample Markdown Document
+        UriTemplate = "doc://example",
+        Name = "Example Document",
+        Title = "Example Document",
+        MimeType = "text/plain")]
+    [Description("An example document resource")]
+    public static string ExampleDocument() => """
+        # Sample Document
         
         This is a sample document served as an MCP resource.
         
@@ -62,14 +63,43 @@ public class AllResources
         Clients can read this resource to get sample content for testing
         or demonstration purposes.
         
-        ```csharp
-        // Example code block
-        var client = new McpClient();
-        var content = await client.ReadResourceAsync("file://example.md");
-        ```
-        
         ## Conclusion
         
         Resources are a powerful way to expose data to MCP clients!
         """;
+
+    /// <summary>
+    /// Personalized greeting resource template.
+    /// Demonstrates parameterized resources.
+    /// </summary>
+    [McpServerResource(
+        UriTemplate = "greeting://{name}",
+        Name = "Personalized Greeting",
+        Title = "Personalized Greeting",
+        MimeType = "text/plain")]
+    [Description("A personalized greeting for a specific person")]
+    public static string PersonalizedGreeting(string name) =>
+        $"Hello, {name}! This is a personalized greeting generated just for you.";
+
+    /// <summary>
+    /// Item data resource template.
+    /// Demonstrates JSON resource with parameters.
+    /// </summary>
+    [McpServerResource(
+        UriTemplate = "item://{id}",
+        Name = "Item Data",
+        Title = "Item Data",
+        MimeType = "application/json")]
+    [Description("Data for a specific item by ID")]
+    public static string ItemData(string id)
+    {
+        var itemData = new
+        {
+            id = id,
+            name = $"Item {id}",
+            description = $"This is a sample item with ID {id}",
+            timestamp = DateTime.UtcNow.ToString("o")
+        };
+        return JsonSerializer.Serialize(itemData, new JsonSerializerOptions { WriteIndented = true });
+    }
 }
