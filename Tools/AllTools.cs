@@ -187,6 +187,16 @@ public class ProgressTools
         [Description("Number of steps to simulate")] int steps = 5,
         CancellationToken cancellationToken = default)
     {
+        // Validate steps parameter
+        if (steps < 1)
+        {
+            return "Error: steps must be at least 1";
+        }
+        if (steps > 100)
+        {
+            return "Error: steps must not exceed 100 to prevent excessive delays";
+        }
+
         for (int i = 0; i < steps; i++)
         {
             // Note: Progress reporting depends on SDK support
@@ -328,11 +338,16 @@ public class ElicitationTools
                 return "Elicitation not supported by this client.";
             }
 
+            // Build message with destructive warning if applicable
+            var message = destructive 
+                ? $"⚠️ DESTRUCTIVE ACTION - Please confirm: {action}"
+                : $"Please confirm: {action}";
+
             // Form elicitation: Display a structured form with typed fields
             // The client renders this as a dialog/form based on the JSON schema
             var result = await server.ElicitAsync(new ElicitRequestParams
             {
-                Message = $"Please confirm: {action}",
+                Message = message,
                 RequestedSchema = new ElicitRequestParams.RequestSchema
                 {
                     Properties =
@@ -340,7 +355,9 @@ public class ElicitationTools
                         ["confirm"] = new ElicitRequestParams.BooleanSchema
                         {
                             Title = "Confirm",
-                            Description = "Confirm the action"
+                            Description = destructive 
+                                ? "Confirm this destructive action" 
+                                : "Confirm the action"
                         },
                         ["reason"] = new ElicitRequestParams.StringSchema
                         {
