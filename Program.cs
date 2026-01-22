@@ -100,8 +100,8 @@ if (useHttp)
             {
                 Experimental = new Dictionary<string, object>(),
                 Tools = new ToolsCapability { ListChanged = true },
-                Resources = new ResourcesCapability 
-                { 
+                Resources = new ResourcesCapability
+                {
                     ListChanged = true,
                     Subscribe = true
                 },
@@ -162,8 +162,8 @@ else
             {
                 Experimental = new Dictionary<string, object>(),
                 Tools = new ToolsCapability { ListChanged = true },
-                Resources = new ResourcesCapability 
-                { 
+                Resources = new ResourcesCapability
+                {
                     ListChanged = true,
                     Subscribe = true
                 },
