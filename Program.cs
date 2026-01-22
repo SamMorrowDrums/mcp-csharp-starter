@@ -38,8 +38,8 @@ A demonstration MCP server showcasing C# SDK capabilities.
 - **ask_llm**: Invoke LLM sampling to ask questions (requires client support)
 
 ### Dynamic Features
-- **load_bonus_tool**: Dynamically adds a calculator tool at runtime (sends tools/list_changed notification)
-- **bonus_calculator**: Hidden until you call load_bonus_tool
+- **load_bonus_tool**: Dynamically adds a calculator tool at runtime
+- **bonus_calculator**: Available after calling load_bonus_tool
 
 ### Elicitation (User Input)
 - **confirm_action**: Demonstrates schema elicitation - requests user confirmation
@@ -47,8 +47,10 @@ A demonstration MCP server showcasing C# SDK capabilities.
 
 ## Available Resources
 
-- **info://about**: Server information
-- **file://example.md**: Sample markdown document
+- **about://server**: Server information
+- **doc://example**: Sample markdown document
+- **greeting://{name}**: Personalized greeting template
+- **item://{id}**: Item data by ID
 
 ## Available Prompts
 
@@ -60,20 +62,32 @@ A demonstration MCP server showcasing C# SDK capabilities.
 1. **Testing Connection**: Call `hello` with your name to verify the server is responding
 2. **Weather Demo**: Call `get_weather` with a location to see structured output
 3. **Progress Demo**: Call `long_task` to see progress notifications
-4. **Dynamic Loading**: Call `load_bonus_tool` - the server automatically notifies clients when tools change
+4. **Dynamic Loading**: Call `load_bonus_tool`, then refresh tools to see `bonus_calculator`
 5. **Elicitation Demo**: Call `confirm_action` to see user confirmation flow
 6. **URL Elicitation**: Call `get_feedback` to open a feedback form
 
 ## Tool Annotations
 
 All tools include annotations indicating:
-- Whether they modify state (ReadOnly)
-- If they're safe to retry (Idempotent)
-- Whether they access external systems (OpenWorld)
-- Whether they can destroy data (Destructive)
+- Whether they modify state (readOnlyHint)
+- If they're safe to retry (idempotentHint)
+- Whether they access external systems (openWorldHint)
 
 Use these hints to make informed decisions about tool usage.
 """;
+
+// Shared capabilities configuration for both HTTP and stdio transports
+var serverCapabilities = new ServerCapabilities
+{
+    Experimental = new Dictionary<string, object>(),
+    Tools = new ToolsCapability { ListChanged = true },
+    Resources = new ResourcesCapability
+    {
+        ListChanged = true,
+        Subscribe = true
+    },
+    Prompts = new PromptsCapability { ListChanged = true }
+};
 
 var useHttp = args.Contains("--http");
 var portArg = Array.IndexOf(args, "--port");
@@ -95,6 +109,7 @@ if (useHttp)
                 Description = "A starter MCP server demonstrating tools, resources, and prompts in C#"
             };
             options.ServerInstructions = ServerInstructions;
+            options.Capabilities = serverCapabilities;
         })
         .WithHttpTransport()
         .WithTools<GreetingTools>()
@@ -146,6 +161,7 @@ else
                 Description = "A starter MCP server demonstrating tools, resources, and prompts in C#"
             };
             options.ServerInstructions = ServerInstructions;
+            options.Capabilities = serverCapabilities;
         })
         .WithStdioServerTransport()
         .WithTools<GreetingTools>()

@@ -89,6 +89,11 @@ public class WeatherTools
     /// <summary>
     /// Get the current weather for a city
     /// </summary>
+    /// <remarks>
+    /// This tool demonstrates structured content output using the WeatherData record type.
+    /// UseStructuredContent is enabled to generate an outputSchema that describes the
+    /// structure of the returned weather data, making it easier for clients to parse and use.
+    /// </remarks>
     [McpServerTool(
         Name = "get_weather",
         Title = "Get Weather",
@@ -96,20 +101,19 @@ public class WeatherTools
         Destructive = false,
         Idempotent = false,  // Simulated - results vary
         OpenWorld = false,   // Not real external call
+        UseStructuredContent = true,
         IconSource = Icons.SunBehindCloud)]
     [Description("Get the current weather for a city")]
-    public static string GetWeather(
+    public static WeatherData GetWeather(
         [Description("City name to get weather for")] string city)
     {
-        var weather = new WeatherData(
+        return new WeatherData(
             Location: city,
             Temperature: 15 + _random.Next(20),
             Unit: "celsius",
             Conditions: Conditions[_random.Next(Conditions.Length)],
             Humidity: 40 + _random.Next(40)
         );
-
-        return JsonSerializer.Serialize(weather, new JsonSerializerOptions { WriteIndented = true });
     }
 }
 
