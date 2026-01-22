@@ -76,6 +76,19 @@ All tools include annotations indicating:
 Use these hints to make informed decisions about tool usage.
 """;
 
+// Shared capabilities configuration for both HTTP and stdio transports
+var serverCapabilities = new ServerCapabilities
+{
+    Experimental = new Dictionary<string, object>(),
+    Tools = new ToolsCapability { ListChanged = true },
+    Resources = new ResourcesCapability
+    {
+        ListChanged = true,
+        Subscribe = true
+    },
+    Prompts = new PromptsCapability { ListChanged = true }
+};
+
 var useHttp = args.Contains("--http");
 var portArg = Array.IndexOf(args, "--port");
 var port = portArg >= 0 && portArg + 1 < args.Length ? int.Parse(args[portArg + 1]) : 3000;
@@ -96,17 +109,7 @@ if (useHttp)
                 Description = "A starter MCP server demonstrating tools, resources, and prompts in C#"
             };
             options.ServerInstructions = ServerInstructions;
-            options.Capabilities = new ServerCapabilities
-            {
-                Experimental = new Dictionary<string, object>(),
-                Tools = new ToolsCapability { ListChanged = true },
-                Resources = new ResourcesCapability
-                {
-                    ListChanged = true,
-                    Subscribe = true
-                },
-                Prompts = new PromptsCapability { ListChanged = true }
-            };
+            options.Capabilities = serverCapabilities;
         })
         .WithHttpTransport()
         .WithTools<GreetingTools>()
@@ -158,17 +161,7 @@ else
                 Description = "A starter MCP server demonstrating tools, resources, and prompts in C#"
             };
             options.ServerInstructions = ServerInstructions;
-            options.Capabilities = new ServerCapabilities
-            {
-                Experimental = new Dictionary<string, object>(),
-                Tools = new ToolsCapability { ListChanged = true },
-                Resources = new ResourcesCapability
-                {
-                    ListChanged = true,
-                    Subscribe = true
-                },
-                Prompts = new PromptsCapability { ListChanged = true }
-            };
+            options.Capabilities = serverCapabilities;
         })
         .WithStdioServerTransport()
         .WithTools<GreetingTools>()

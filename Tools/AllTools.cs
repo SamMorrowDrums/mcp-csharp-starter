@@ -89,6 +89,11 @@ public class WeatherTools
     /// <summary>
     /// Get the current weather for a city
     /// </summary>
+    /// <remarks>
+    /// This tool demonstrates structured content output using the WeatherData record type.
+    /// UseStructuredContent is enabled to generate an outputSchema that describes the
+    /// structure of the returned weather data, making it easier for clients to parse and use.
+    /// </remarks>
     [McpServerTool(
         Name = "get_weather",
         Title = "Get Weather",
