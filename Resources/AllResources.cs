@@ -34,7 +34,7 @@ public class AllResources
         
         Version: 1.0.0
         Framework: .NET 8.0
-        SDK: ModelContextProtocol 0.5.0-preview.1
+        SDK: ModelContextProtocol 1.0.0
         """;
 
     /// <summary>
