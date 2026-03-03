@@ -1,9 +1,20 @@
 /*
  * MCP C# Starter - Prompts
  *
- * Demonstrates various prompt patterns in MCP:
- * - Basic prompts with arguments
- * - Prompts with argument completions
+ * Prompts are reusable message templates that clients can retrieve and send to
+ * an LLM. Unlike tools (server executes code) or resources (server returns data),
+ * prompts provide pre-written instructions the *client* sends to its LLM.
+ *
+ * USE CASES:
+ * - Standardized workflows (code review, greeting generation)
+ * - Complex multi-step instructions the user doesn't want to type every time
+ * - Parameterized templates with arguments filled in at request time
+ *
+ * HOW IT WORKS IN C#:
+ * - [McpServerPromptType] marks a class as containing MCP prompts
+ * - [McpServerPrompt] marks a method as an MCP prompt
+ * - Methods return IEnumerable<PromptMessage> — the messages to send to the LLM
+ * - Parameters become prompt arguments the client fills in
  */
 
 using System.ComponentModel;
@@ -14,13 +25,15 @@ using ModelContextProtocol.Server;
 namespace McpCSharpStarter.Prompts;
 
 /// <summary>
-/// All prompts for the MCP server
+/// All prompts for the MCP server.
+/// Each method returns messages that the client sends to its LLM.
 /// </summary>
 [McpServerPromptType]
 public class AllPrompts
 {
     /// <summary>
-    /// Generate a greeting message
+    /// Greeting prompt — demonstrates a prompt with required and optional arguments.
+    /// The "style" parameter is optional, showing how prompts can have defaults.
     /// </summary>
     [McpServerPrompt(Name = "greet", Title = "Greeting Prompt")]
     [Description("Generate a greeting message")]
@@ -47,7 +60,8 @@ public class AllPrompts
     }
 
     /// <summary>
-    /// Review code for potential improvements
+    /// Code review prompt — demonstrates a structured multi-step instruction.
+    /// The LLM receives a detailed review checklist along with the user's code.
     /// </summary>
     [McpServerPrompt(Name = "code_review", Title = "Code Review")]
     [Description("Review code for potential improvements")]

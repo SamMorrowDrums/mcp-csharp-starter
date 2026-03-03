@@ -1,3 +1,26 @@
+/*
+ * MCP C# Starter - Resources
+ *
+ * Resources are read-only data that MCP servers expose to clients. Unlike tools
+ * (which perform actions), resources provide context — files, documents, config,
+ * or any data an AI assistant might need to answer questions.
+ *
+ * TWO KINDS OF RESOURCES:
+ * - Static resources: Fixed URI, always available (e.g., about://server)
+ * - Resource templates: URI with parameters, generates content on demand
+ *   (e.g., greeting://{name} or item://{id})
+ *
+ * URI SCHEMES:
+ * Resources use custom URI schemes (not http://). The scheme is arbitrary —
+ * about://, doc://, greeting:// are conventions, not standards. Clients use
+ * these URIs to request resource content from the server.
+ *
+ * HOW IT WORKS IN C#:
+ * - [McpServerResourceType] marks a class as containing MCP resources
+ * - [McpServerResource] marks a method and defines its URI, name, and MIME type
+ * - Method parameters map to {placeholders} in UriTemplate for resource templates
+ */
+
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 using System.Text.Json;
@@ -5,15 +28,18 @@ using System.Text.Json;
 namespace McpCSharpStarter.Resources;
 
 /// <summary>
-/// Resource handlers for the MCP server.
-/// Resources provide data that can be read by clients and referenced by tools.
+/// All resources for the MCP server.
 /// </summary>
 [McpServerResourceType]
 public class AllResources
 {
+    // =========================================================================
+    // STATIC RESOURCES — Fixed content at a known URI
+    // These appear in the resources/list response so clients know about them.
+    // =========================================================================
+
     /// <summary>
-    /// About resource - provides server information.
-    /// Demonstrates a simple text resource.
+    /// About resource — a simple static text resource at a fixed URI.
     /// </summary>
     [McpServerResource(
         UriTemplate = "about://server",
@@ -38,8 +64,7 @@ public class AllResources
         """;
 
     /// <summary>
-    /// Sample document resource - demonstrates file-like resource.
-    /// Shows how to serve document content.
+    /// Example document — demonstrates serving document content as a resource.
     /// </summary>
     [McpServerResource(
         UriTemplate = "doc://example",
@@ -68,9 +93,16 @@ public class AllResources
         Resources are a powerful way to expose data to MCP clients!
         """;
 
+    // =========================================================================
+    // RESOURCE TEMPLATES — Parameterized URIs that generate content on demand
+    // Templates use {placeholders} in the URI. The client fills in the values
+    // and the server generates content dynamically. These appear in the
+    // resources/templates/list response.
+    // =========================================================================
+
     /// <summary>
-    /// Personalized greeting resource template.
-    /// Demonstrates parameterized resources.
+    /// Personalized greeting — a resource template with a {name} parameter.
+    /// Requesting greeting://Alice returns a greeting for Alice.
     /// </summary>
     [McpServerResource(
         UriTemplate = "greeting://{name}",
@@ -82,8 +114,8 @@ public class AllResources
         $"Hello, {name}! This is a personalized greeting generated just for you.";
 
     /// <summary>
-    /// Item data resource template.
-    /// Demonstrates JSON resource with parameters.
+    /// Item data — a resource template returning JSON content.
+    /// Demonstrates using MimeType = "application/json" for structured data.
     /// </summary>
     [McpServerResource(
         UriTemplate = "item://{id}",

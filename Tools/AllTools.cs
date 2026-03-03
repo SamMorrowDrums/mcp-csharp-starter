@@ -1,20 +1,27 @@
 /*
  * MCP C# Starter - Tools
  *
- * Demonstrates various tool patterns in MCP:
- * - Basic tool with annotations
- * - Tool with structured output
- * - Tool that invokes sampling
- * - Tool with progress updates
- * - Tool that dynamically loads another tool
+ * Tools are functions that an AI assistant can invoke on behalf of the user.
+ * They are the primary way MCP servers expose actions to clients.
  *
- * ## Tool Annotations
+ * HOW IT WORKS IN C#:
+ * - [McpServerToolType] marks a class as containing MCP tools
+ * - [McpServerTool] marks a method as an MCP tool and sets its annotations
+ * - [Description] on parameters generates the tool's input schema automatically
+ * - The C# SDK uses reflection to build JSON schemas from method signatures
  *
- * Every tool SHOULD have annotations to help AI assistants understand behavior:
- * - ReadOnly: Tool only reads data, doesn't modify state
- * - Destructive: Tool can permanently delete or modify data
- * - Idempotent: Repeated calls with same args have same effect
- * - OpenWorld: Tool accesses external systems (web, APIs, etc.)
+ * TOOL ANNOTATIONS - Every tool SHOULD have annotations for AI assistants
+ *
+ * WHY ANNOTATIONS MATTER:
+ * Annotations enable MCP client applications to understand the risk level of
+ * tool calls. Clients can use these hints to implement safety policies
+ * (e.g., auto-approve read-only tools, require confirmation for destructive ones).
+ *
+ * ANNOTATION FIELDS:
+ * - ReadOnly:     Tool only reads data, doesn't modify state
+ * - Destructive:  Tool can permanently delete or modify data
+ * - Idempotent:   Repeated calls with same args have same effect
+ * - OpenWorld:    Tool accesses external systems (web, APIs, etc.)
  */
 
 using System.ComponentModel;
@@ -43,13 +50,15 @@ public enum CalculatorOperation
 }
 
 /// <summary>
-/// Basic greeting tools demonstrating tool annotations
+/// Basic greeting tool — the simplest possible MCP tool.
+/// Demonstrates: annotations, input schema from method parameters, string return.
 /// </summary>
 [McpServerToolType]
 public class GreetingTools
 {
     /// <summary>
-    /// Say hello to a person
+    /// Say hello to a person.
+    /// ReadOnly + Idempotent: safe to call without side effects or confirmation.
     /// </summary>
     [McpServerTool(
         Name = "hello",
@@ -78,7 +87,9 @@ public record WeatherData(
     int Humidity);
 
 /// <summary>
-/// Weather tool demonstrating structured output
+/// Weather tool — demonstrates structured content output.
+/// UseStructuredContent = true generates an outputSchema from the return type,
+/// so clients know the shape of the response without parsing free text.
 /// </summary>
 [McpServerToolType]
 public class WeatherTools
@@ -118,7 +129,10 @@ public class WeatherTools
 }
 
 /// <summary>
-/// Sampling tool demonstrating LLM invocation
+/// Sampling tool — demonstrates server-initiated LLM calls.
+/// MCP "sampling" lets a tool ask the *client's* LLM a question, enabling
+/// agentic patterns where tools can reason and make decisions.
+/// The McpServer parameter is injected automatically by the SDK.
 /// </summary>
 [McpServerToolType]
 public class SamplingTools
@@ -168,7 +182,9 @@ public class SamplingTools
 }
 
 /// <summary>
-/// Long-running task tool demonstrating progress updates
+/// Progress tool — demonstrates long-running tasks.
+/// In production, you'd send progress notifications so the client can show
+/// a progress bar. The McpServer parameter enables this communication.
 /// </summary>
 [McpServerToolType]
 public class ProgressTools
@@ -212,8 +228,18 @@ public class ProgressTools
     }
 }
 
+// =============================================================================
+// DYNAMIC TOOL LOADING
+// This demonstrates adding tools at runtime. When load_bonus_tool is called,
+// it registers a new tool (bonus_calculator) and the server notifies clients
+// via a tools/list_changed notification (enabled by ListChanged = true in
+// capabilities). Clients refresh their tool list in response.
+// =============================================================================
+
 /// <summary>
-/// Tool that demonstrates dynamic tool loading
+/// Dynamic tool loader — demonstrates runtime tool registration.
+/// ReadOnly = false because it modifies server state (the tool list).
+/// Idempotent = true because calling it again after loading is a no-op.
 /// </summary>
 [McpServerToolType]
 public class DynamicTools
@@ -239,12 +265,13 @@ public class DynamicTools
             return "Bonus tool is already loaded! Try calling 'bonus_calculator'.";
         }
 
-        // Create the bonus tool dynamically from the CalculatorTools.Calculate method
+        // Dynamically create a tool from the CalculatorTools.Calculate method.
+        // McpServerTool.Create uses reflection to build the tool from its attributes.
         var calculateMethod = typeof(CalculatorTools).GetMethod(nameof(CalculatorTools.Calculate))!;
         var bonusTool = McpServerTool.Create(calculateMethod);
 
-        // Add to the server's tool collection - this automatically sends
-        // the tools/list_changed notification to connected clients
+        // Adding to ToolCollection automatically sends the tools/list_changed
+        // notification to connected clients (because ListChanged = true in capabilities)
         server.ServerOptions.ToolCollection?.Add(bonusTool);
 
         _bonusToolLoaded = true;
@@ -254,7 +281,9 @@ public class DynamicTools
 }
 
 /// <summary>
-/// Calculator tool (would be dynamically loaded)
+/// Calculator tool — loaded dynamically by load_bonus_tool.
+/// Not registered at startup (not in .WithTools&lt;CalculatorTools&gt;() in Program.cs).
+/// ReadOnly + Idempotent: pure computation, no side effects.
 /// </summary>
 [McpServerToolType]
 public class CalculatorTools

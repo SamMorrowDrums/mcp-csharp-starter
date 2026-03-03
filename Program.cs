@@ -21,7 +21,12 @@ using ModelContextProtocol;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 
-// Server instructions for AI assistants
+// =============================================================================
+// SERVER INSTRUCTIONS
+// Instructions are sent to AI assistants when they connect. They describe what
+// this server can do, helping the LLM use tools, resources, and prompts
+// effectively without the user needing to explain everything.
+// =============================================================================
 const string ServerInstructions = """
 # MCP C# Starter Server
 
@@ -58,11 +63,22 @@ Tools include annotations to help AI assistants understand behavior:
 - **code_review**: Review code for potential improvements
 """;
 
-// Shared capabilities configuration for both HTTP and stdio transports
+// =============================================================================
+// SERVER CAPABILITIES
+// Capabilities tell the client what features this server supports. The client
+// uses these during initialization to know what it can request.
+//
+// ListChanged: When true, the server may send notifications that its list of
+// tools/resources/prompts has changed at runtime (e.g., after load_bonus_tool
+// dynamically adds a new tool). When false, the list is static.
+// =============================================================================
 var serverCapabilities = new ServerCapabilities
 {
     Experimental = new Dictionary<string, object>(),
+    // Tools.ListChanged = true because load_bonus_tool adds tools dynamically at runtime.
+    // The server sends a tools/list_changed notification so clients refresh their tool list.
     Tools = new ToolsCapability { ListChanged = true },
+    // Resources and Prompts are static — they don't change after startup.
     Resources = new ResourcesCapability
     {
         ListChanged = false,
@@ -75,9 +91,21 @@ var useHttp = args.Contains("--http");
 var portArg = Array.IndexOf(args, "--port");
 var port = portArg >= 0 && portArg + 1 < args.Length ? int.Parse(args[portArg + 1]) : 3000;
 
+// =============================================================================
+// TRANSPORT SELECTION
+// MCP supports multiple transports for communication between client and server:
+//
+// - stdio: Client launches the server as a subprocess and communicates via
+//   stdin/stdout using JSON-RPC. Best for local tools and editor integrations.
+//   Logging must be disabled to avoid corrupting the JSON-RPC stream.
+//
+// - HTTP (Streamable HTTP): Server runs as a web service. Clients connect over
+//   HTTP, enabling remote servers and multi-client scenarios. Includes a health
+//   endpoint for monitoring.
+// =============================================================================
 if (useHttp)
 {
-    // HTTP/SSE Transport
+    // HTTP Transport — server runs as a web service clients connect to over the network
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Services
@@ -123,13 +151,15 @@ if (useHttp)
 }
 else
 {
-    // stdio Transport (default)
+    // stdio Transport (default) — client launches this server as a subprocess
+    // and communicates via stdin/stdout using JSON-RPC messages
     Console.Error.WriteLine("MCP C# Starter running on stdio");
     Console.Error.WriteLine("Press Ctrl+C to exit");
 
     var builder = Host.CreateApplicationBuilder(args);
 
-    // Disable all logging for stdio transport to avoid interfering with JSON-RPC
+    // IMPORTANT: Disable all logging for stdio — any text written to stdout that
+    // isn't valid JSON-RPC will break the protocol. Use stderr for diagnostics.
     builder.Logging.ClearProviders();
 
     builder.Services
