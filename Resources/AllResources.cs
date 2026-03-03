@@ -93,13 +93,17 @@ public class AllResources
     [Description("Data for a specific item by ID")]
     public static string ItemData(string id)
     {
-        var itemData = new
+        var items = new Dictionary<string, object>
         {
-            id = id,
-            name = $"Item {id}",
-            description = $"This is a sample item with ID {id}",
-            timestamp = DateTime.UtcNow.ToString("o")
+            ["1"] = new { id = "1", name = "Widget", description = "A standard widget", category = "tools" },
+            ["2"] = new { id = "2", name = "Gadget", description = "A fancy gadget", category = "electronics" },
+            ["3"] = new { id = "3", name = "Doohickey", description = "A mysterious doohickey", category = "misc" }
         };
+
+        var itemData = items.TryGetValue(id, out var item)
+            ? item
+            : new { id = id, name = $"Item {id}", description = $"Unknown item with ID {id}", category = "unknown" };
+
         return JsonSerializer.Serialize(itemData, new JsonSerializerOptions { WriteIndented = true });
     }
 }

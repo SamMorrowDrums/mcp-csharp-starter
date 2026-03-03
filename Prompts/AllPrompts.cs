@@ -52,7 +52,7 @@ public class AllPrompts
     [McpServerPrompt(Name = "code_review", Title = "Code Review")]
     [Description("Review code for potential improvements")]
     public static IEnumerable<PromptMessage> CodeReview(
-        [Description("The code to review")] string code)
+        [Description("Code to review")] string code)
     {
         var text = $"""
             Please review the following code for potential improvements, focusing on:
