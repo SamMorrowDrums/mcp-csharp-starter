@@ -25,55 +25,37 @@ using ModelContextProtocol.Server;
 const string ServerInstructions = """
 # MCP C# Starter Server
 
-A demonstration MCP server showcasing C# SDK capabilities.
+A demonstration MCP server built with the C# SDK.
 
 ## Available Tools
 
-### Greeting & Demos
-- **hello**: Simple greeting - use to test connectivity
-- **get_weather**: Returns simulated weather data
-- **long_task**: Demonstrates progress reporting (takes ~5 seconds)
-
-### LLM Interaction
-- **ask_llm**: Invoke LLM sampling to ask questions (requires client support)
-
-### Dynamic Features
-- **load_bonus_tool**: Dynamically adds a calculator tool at runtime
+- **hello**: Say hello to a person
+- **get_weather**: Get the current weather for a city
+- **long_task**: Simulate a long-running task with progress updates
+- **ask_llm**: Ask the connected LLM a question using sampling
+- **load_bonus_tool**: Dynamically register a new bonus tool
+- **confirm_action**: Request user confirmation before proceeding
+- **get_feedback**: Request feedback from the user
 - **bonus_calculator**: Available after calling load_bonus_tool
 
-### Elicitation (User Input)
-- **confirm_action**: Demonstrates schema elicitation - requests user confirmation
-- **get_feedback**: Demonstrates URL elicitation - opens feedback form in browser
+## Tool Annotations
+
+Tools include annotations to help AI assistants understand behavior:
+- readOnlyHint: Tool only reads data, doesn't modify state
+- idempotentHint: Repeated calls with same args have same effect
+- openWorldHint: Tool accesses external systems (web, APIs, etc.)
 
 ## Available Resources
 
 - **about://server**: Server information
-- **doc://example**: Sample markdown document
-- **greeting://{name}**: Personalized greeting template
+- **doc://example**: Example document
+- **greeting://{name}**: Personalized greeting
 - **item://{id}**: Item data by ID
 
 ## Available Prompts
 
-- **greeting**: Generates a personalized greeting
-- **code_review**: Structured code review prompt
-
-## Recommended Workflows
-
-1. **Testing Connection**: Call `hello` with your name to verify the server is responding
-2. **Weather Demo**: Call `get_weather` with a location to see structured output
-3. **Progress Demo**: Call `long_task` to see progress notifications
-4. **Dynamic Loading**: Call `load_bonus_tool`, then refresh tools to see `bonus_calculator`
-5. **Elicitation Demo**: Call `confirm_action` to see user confirmation flow
-6. **URL Elicitation**: Call `get_feedback` to open a feedback form
-
-## Tool Annotations
-
-All tools include annotations indicating:
-- Whether they modify state (readOnlyHint)
-- If they're safe to retry (idempotentHint)
-- Whether they access external systems (openWorldHint)
-
-Use these hints to make informed decisions about tool usage.
+- **greet**: Generate a greeting message
+- **code_review**: Review code for potential improvements
 """;
 
 // Shared capabilities configuration for both HTTP and stdio transports
