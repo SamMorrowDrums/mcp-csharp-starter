@@ -65,10 +65,10 @@ var serverCapabilities = new ServerCapabilities
     Tools = new ToolsCapability { ListChanged = true },
     Resources = new ResourcesCapability
     {
-        ListChanged = true,
-        Subscribe = true
+        ListChanged = false,
+        Subscribe = false
     },
-    Prompts = new PromptsCapability { ListChanged = true }
+    Prompts = new PromptsCapability { ListChanged = false }
 };
 
 var useHttp = args.Contains("--http");
