@@ -30,6 +30,13 @@
       "group": "test"
     },
     {
+      "label": "Watch (live reload)",
+      "type": "shell",
+      "command": "dotnet watch run",
+      "group": "test",
+      "isBackground": true
+    },
+    {
       "label": "Clean",
       "type": "shell",
       "command": "dotnet clean",
