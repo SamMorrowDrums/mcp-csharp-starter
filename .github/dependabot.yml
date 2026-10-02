@@ -22,3 +22,11 @@ updates:
         update-types:
           - "minor"
           - "patch"
+
+  # .NET SDK pinned in global.json
+  - package-ecosystem: "dotnet-sdk"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"

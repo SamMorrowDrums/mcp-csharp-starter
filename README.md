@@ -129,6 +129,25 @@ dotnet publish -c Release
 The `dotnet watch run` command provides automatic rebuilds during development.
 Changes to any `.cs` file will automatically rebuild and restart the server.
 
+### Dependency Updates
+
+Dependabot checks NuGet packages, GitHub Actions, and the .NET SDK in `global.json`
+weekly. NuGet versions are explicit, and `packages.lock.json` records the
+resolved direct and transitive dependencies. CI restores in locked mode and
+treats restore warnings, including vulnerability advisories, as errors.
+
+After changing package versions, regenerate and commit the lockfile:
+
+```bash
+dotnet restore --force-evaluate
+dotnet restore --locked-mode --warnaserror
+dotnet list package --vulnerable --include-transitive
+```
+
+The server uses the stable MCP SDK 1.4.1 release. SDK 2.x is deferred because it
+changes HTTP session defaults and deprecates sampling, which this workshop
+demonstrates; upgrading requires a separate behavior and compatibility migration.
+
 ## 🔍 MCP Inspector
 
 The [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) is an essential development tool for testing and debugging MCP servers.
