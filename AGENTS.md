@@ -24,7 +24,7 @@ This file provides context for AI coding agents working in this repository.
 ## Technology Stack
 
 - **Runtime**: .NET 8.0
-- **MCP SDK**: `ModelContextProtocol` NuGet package (0.5.0-preview.1)
+- **MCP SDK**: `ModelContextProtocol` and `ModelContextProtocol.AspNetCore` NuGet packages (stable 1.4.1; 2.x migration deferred to preserve workshop behavior)
 - **DI Framework**: Microsoft.Extensions.Hosting
 - **Pattern**: Attribute-based (`[McpServerTool]`, `[McpServerResource]`, `[McpServerPrompt]`)
 - **Formatter**: dotnet format (built-in)
@@ -57,6 +57,13 @@ This file provides context for AI coding agents working in this repository.
 ```bash
 # Restore packages
 dotnet restore
+
+# After updating dependencies, regenerate and commit packages.lock.json
+dotnet restore --force-evaluate
+
+# Verify the locked graph and audit direct and transitive dependencies
+dotnet restore --locked-mode --warnaserror
+dotnet list package --vulnerable --include-transitive
 
 # Build
 dotnet build
