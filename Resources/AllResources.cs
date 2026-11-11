@@ -59,7 +59,7 @@ public class AllResources
         - Server configuration
         
         Version: 1.0.0
-        Framework: .NET 8.0
+        Framework: .NET 10.0
         SDK: ModelContextProtocol
         """;
 
