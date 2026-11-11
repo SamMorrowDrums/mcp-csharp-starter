@@ -1,6 +1,6 @@
 {
   "name": "MCP C# Starter",
-  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-10.0",
   "features": {},
   "postCreateCommand": "dotnet restore",
   "customizations": {
