@@ -113,7 +113,7 @@ if (useHttp)
             options.Capabilities = serverCapabilities;
         })
         .WithHttpTransport(options =>
-            options.SessionMode = HttpServerSessionMode.StatefulForInitializeClients)
+            options.SessionMode = HttpServerSessionMode.Stateful)
         .WithTools<GreetingTools>()
         .WithTools<WeatherTools>()
         .WithTools<SamplingTools>()
@@ -135,7 +135,7 @@ if (useHttp)
     }));
 
     Console.WriteLine($"MCP C# Starter running on http://localhost:{port}");
-    Console.WriteLine($"  MCP endpoint: http://localhost:{port}/mcp");
+    Console.WriteLine($"  MCP endpoint: http://localhost:{port}/");
     Console.WriteLine($"  Health check: http://localhost:{port}/health");
     Console.WriteLine("Press Ctrl+C to exit");
 

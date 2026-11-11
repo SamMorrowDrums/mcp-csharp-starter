@@ -21,7 +21,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "http://localhost:3000/mcp",
+      "url": "http://localhost:3000/",
       "description": "Local HTTP server"
     }
   ]

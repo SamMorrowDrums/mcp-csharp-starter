@@ -25,11 +25,20 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore --locked-mode --warnaserror
 
+      - name: Restore HTTP compatibility checks
+        run: dotnet restore tests/HttpSessionCompatibility/HttpSessionCompatibility.csproj --locked-mode --warnaserror
+
       - name: Check formatting
         run: dotnet format --verify-no-changes --verbosity diagnostic
+
+      - name: Check HTTP compatibility test formatting
+        run: dotnet format tests/HttpSessionCompatibility/HttpSessionCompatibility.csproj --verify-no-changes --verbosity quiet
 
       - name: Build
         run: dotnet build --no-restore --warnaserror
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
+
+      - name: Verify HTTP session compatibility
+        run: dotnet run --project tests/HttpSessionCompatibility/HttpSessionCompatibility.csproj --no-restore
