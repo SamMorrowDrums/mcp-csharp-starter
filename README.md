@@ -35,7 +35,8 @@ A feature-complete Model Context Protocol (MCP) server template in C# using the 
 
 ### Prerequisites
 
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (the project continues to target `net8.0`)
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (pinned build SDK)
+- [.NET 8.0 ASP.NET Core Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (required to run the `net8.0` app; installing the .NET 8 SDK also provides it)
 
 ### Installation
 
