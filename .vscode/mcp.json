@@ -15,7 +15,7 @@
     // HTTP transport: Run 'dotnet run -- --http' in terminal, then:
     // "mcp-csharp-starter-http": {
     //   "type": "http",
-    //   "url": "http://localhost:3000/mcp"
+    //   "url": "http://localhost:3000/"
     // }
   }
 }
