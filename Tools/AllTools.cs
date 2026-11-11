@@ -157,6 +157,7 @@ public class SamplingTools
     {
         try
         {
+#pragma warning disable MCP9005 // Keep the sampling demo available to clients using pre-2026-07-28 protocol versions.
             var result = await server.SampleAsync(
                 new CreateMessageRequestParams
                 {
@@ -170,6 +171,7 @@ public class SamplingTools
                     MaxTokens = maxTokens
                 },
                 cancellationToken: cancellationToken);
+#pragma warning restore MCP9005
 
             var text = result.Content.OfType<TextContentBlock>().FirstOrDefault()?.Text ?? "[non-text response]";
             return $"LLM Response: {text}";

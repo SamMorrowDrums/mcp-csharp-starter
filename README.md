@@ -1,12 +1,12 @@
 # MCP C# Starter
 
 [![CI](https://github.com/SamMorrowDrums/mcp-csharp-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/SamMorrowDrums/mcp-csharp-starter/actions/workflows/ci.yml)
-[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![.NET](https://img.shields.io/badge/.NET-10.0_SDK-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp&logoColor=white)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-purple)](https://modelcontextprotocol.io/)
 
-A feature-complete Model Context Protocol (MCP) server template in C# using the official csharp-sdk. This starter demonstrates all major MCP features with clean, idiomatic C# code leveraging .NET 8 and dependency injection.
+A feature-complete Model Context Protocol (MCP) server template in C# using the official csharp-sdk. This starter demonstrates all major MCP features with clean, idiomatic C# code leveraging the .NET 10 SDK, targeting the .NET 8 runtime, and dependency injection.
 
 ## 📚 Documentation
 
@@ -35,7 +35,8 @@ A feature-complete Model Context Protocol (MCP) server template in C# using the 
 
 ### Prerequisites
 
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (pinned build SDK)
+- [.NET 8.0 ASP.NET Core Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (required to run the `net8.0` app; installing the .NET 8 SDK also provides it)
 
 ### Installation
 
@@ -144,9 +145,12 @@ dotnet restore --locked-mode --warnaserror
 dotnet list package --vulnerable --include-transitive
 ```
 
-The server uses the stable MCP SDK 1.4.1 release. SDK 2.x is deferred because it
-changes HTTP session defaults and deprecates sampling, which this workshop
-demonstrates; upgrading requires a separate behavior and compatibility migration.
+The server uses the stable MCP C# SDK 2.4.0 release. SDK 2.x makes Streamable
+HTTP stateless by default; this starter keeps its HTTP server configuration
+explicit and verifies both stdio and HTTP behavior with the MCP diff workflow.
+The `ask_llm` sampling demo remains available to clients using pre-2026-07-28
+protocol versions. Sampling is deprecated in the 2026-07-28 specification, so
+the SDK's `MCP9005` warning is suppressed only around that demo call.
 
 ## 🔍 MCP Inspector
 

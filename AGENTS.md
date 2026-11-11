@@ -24,7 +24,8 @@ This file provides context for AI coding agents working in this repository.
 ## Technology Stack
 
 - **Runtime**: .NET 8.0
-- **MCP SDK**: `ModelContextProtocol` and `ModelContextProtocol.AspNetCore` NuGet packages (stable 1.4.1; 2.x migration deferred to preserve workshop behavior)
+- **Build SDK**: .NET 10.0 (pinned in `global.json`)
+- **MCP SDK**: `ModelContextProtocol` and `ModelContextProtocol.AspNetCore` NuGet packages (stable 2.4.0)
 - **DI Framework**: Microsoft.Extensions.Hosting
 - **Pattern**: Attribute-based (`[McpServerTool]`, `[McpServerResource]`, `[McpServerPrompt]`)
 - **Formatter**: dotnet format (built-in)

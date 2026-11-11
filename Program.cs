@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol;
+using ModelContextProtocol.AspNetCore;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 
@@ -111,7 +112,8 @@ if (useHttp)
             options.ServerInstructions = ServerInstructions;
             options.Capabilities = serverCapabilities;
         })
-        .WithHttpTransport()
+        .WithHttpTransport(options =>
+            options.SessionMode = HttpServerSessionMode.StatefulForInitializeClients)
         .WithTools<GreetingTools>()
         .WithTools<WeatherTools>()
         .WithTools<SamplingTools>()
