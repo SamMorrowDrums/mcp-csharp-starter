@@ -23,7 +23,7 @@ This file provides context for AI coding agents working in this repository.
 
 ## Technology Stack
 
-- **Runtime**: .NET 8.0
+- **Runtime**: .NET 10.0
 - **Build SDK**: .NET 10.0 (pinned in `global.json`)
 - **MCP SDK**: `ModelContextProtocol` and `ModelContextProtocol.AspNetCore` NuGet packages (stable 2.4.0)
 - **DI Framework**: Microsoft.Extensions.Hosting

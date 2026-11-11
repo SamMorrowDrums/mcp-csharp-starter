@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-purple)](https://modelcontextprotocol.io/)
 
-A feature-complete Model Context Protocol (MCP) server template in C# using the official csharp-sdk. This starter demonstrates all major MCP features with clean, idiomatic C# code leveraging the .NET 10 SDK, targeting the .NET 8 runtime, and dependency injection.
+A feature-complete Model Context Protocol (MCP) server template in C# using the official csharp-sdk. This starter demonstrates all major MCP features with clean, idiomatic C# code leveraging the .NET 10 SDK and runtime, and dependency injection.
 
 ## 📚 Documentation
 
@@ -35,8 +35,7 @@ A feature-complete Model Context Protocol (MCP) server template in C# using the 
 
 ### Prerequisites
 
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (pinned build SDK)
-- [.NET 8.0 ASP.NET Core Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (required to run the `net8.0` app; installing the .NET 8 SDK also provides it)
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (includes the ASP.NET Core runtime required to run the `net10.0` app)
 
 ### Installation
 

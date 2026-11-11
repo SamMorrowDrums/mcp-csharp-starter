@@ -10,7 +10,7 @@
     // For live reload during development, use 'dotnet watch run' in terminal
     
     // Production: Build first with 'dotnet publish', then use the exe:
-    // "command": "./bin/Release/net8.0/McpCSharpStarter"
+    // "command": "./bin/Release/net10.0/McpCSharpStarter"
     
     // HTTP transport: Run 'dotnet run -- --http' in terminal, then:
     // "mcp-csharp-starter-http": {
