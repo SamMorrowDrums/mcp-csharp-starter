@@ -10,7 +10,9 @@ updates:
 
   # NuGet dependencies
   - package-ecosystem: "nuget"
-    directory: "/"
+    directories:
+      - "/"
+      - "/tests/HttpSessionCompatibility"
     schedule:
       interval: "weekly"
     commit-message:
